@@ -12,62 +12,78 @@ public class Main {
             File f = new File("mitja.txt");
             File nouf = new File("noumitja.txt");
 
-            // Leer datos del archivo y calcula los promedios
-            double[] mitjas = calculaMitja(f);
+            // Llegir dades de l'arxiu i calcular les mitjanes
+            double[] mitjes = calculaMitja(f);
 
-            // Mostrar promedios en la pantalla
-            System.out.printf("Mitja Anys: %.2f\n", mitjas[0]);
-            System.out.printf("Mitja Altura: %.2f\n", mitjas[1]);
+            // Mostrar les mitjanes a la pantalla
+            System.out.printf("Mitja Anys: %.2f\n", mitjes[0]);
+            System.out.printf("Mitja Altura: %.2f\n", mitjes[1]);
 
-            // Escribir promedios archivo salida
-            escribirMitjaNouf(nouf, mitjas);
-        } catch (FileNotFoundException e) {
-            System.out.println("ERROR, el programa ha explotat");
+            // Escriure les mitjanes a l'arxiu de sortida
+            escriureMitjaNouf(nouf, mitjes);
+        } catch (IOException e) {
+            System.out.println("ERROR, el programa ha explotat1");
         }
     }
 
-    // Función para calcular promedios y mostrar nombres
-    // Lo del throws me lo ha puesto intelij, pero parece que funciona.
-    public static double[] calculaMitja(File f) throws FileNotFoundException {
+    /**
+     * Funció per calcular la mitjana d'edat i alçada llegides del fitxer.
+     * @param f
+     * @return new double[]{mitjaAnys, mitjaAltura};
+     * @throws IOException
+     */
+    public static double[] calculaMitja(File f) throws IOException {
+        /*
+        El 'throw' serveix per evitar haver de posar el try-catch. En intentar posar el try-catch vam tenir problemes per fer que el programa pogués
+        retornar la mitjana d'anys i alçada, així que vam optar per utilitzar el 'throw'.
+        El que fa és llençar IOException amb double[] mitja = calculaMitja(f); sense la necessitat de crear un try-catch dins de la pròpia funció.
+        (Sugerencia de IntelliJ).
+         */
         Scanner scanner = new Scanner(f);
 
         int totalAnys = 0;
         double totalAltura = 0;
-        int compte = 0; // Contador
+        int compte = 0; // Comptador
 
-        // Lee el archivo
+        // Llegeix l'arxiu
         while (scanner.hasNext()) {
             String name = scanner.next();
             int anys = scanner.nextInt();
             double altura = scanner.nextDouble();
 
-            // Mostrar nombres
+            // Mostrar noms
             System.out.println(name);
 
-            // Calcular sumas
+            // Calcular sumes
             totalAnys += anys;
             totalAltura += altura;
             compte++;
         }
 
-        // Calcular los promedios
+        // Calcular les mitjanes
         double mitjaAnys = (double) totalAnys / compte;
         double mitjaAltura = totalAltura / compte;
 
-        // Retornar promedios en un array
+        // Retornar mitjanes en un array
         return new double[]{mitjaAnys, mitjaAltura};
     }
 
-    // Función para escribir promedios en un archivo
-    public static void escribirMitjaNouf(File outputFile, double[] mitja) {
-        try (PrintWriter w = new PrintWriter(outputFile)) {
-            // Escribir promedios en el archivo de salida
-            // lo de %.2f coge y hace que el float se haga 2 decimales, luego lo explico mejor.
-            w.printf("Mitja de Anys: %.2f\n", mitja[0]);
-            w.printf("Mitja de Altura: %.2f\n", mitja[1]);
+    // Funció per escriure mitjanes en un arxiu
+
+    /**
+     * Aquesta funció escriu les mitjanes d'edat i alçada a l'arxiu de sortida.
+     * @param nouf
+     * @param mitja
+     */
+    public static void escriureMitjaNouf(File nouf, double[] mitja) {
+        try (PrintWriter w = new PrintWriter(nouf)) {
+            // el '%.2f' fa que el nombre de punt flotant sigui de 2 decimals.
+            w.printf("Mitja d'Anys: %.2f\n", mitja[0]);
+            w.printf("Mitja d'Altura: %.2f\n", mitja[1]);
         } catch (FileNotFoundException e) {
-            System.out.println("ERROR, el programa ha explotat");
+            System.out.println("ERROR, el programa ha explotat2");
         }
     }
 }
+
 
