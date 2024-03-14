@@ -24,11 +24,12 @@ public class Main {
             double[] mitjes = calculaMitja(f);
 
             // Mostrar les mitjanes a la pantalla
+            // %.2f es per a "l'aproximació", transforma el float a 2 decimals.
             System.out.printf("Mitja Anys: %.2f\n", mitjes[0]);
             System.out.printf("Mitja Altura: %.2f\n", mitjes[1]);
 
             // Escriure les mitjanes a l'arxiu de sortida
-            escriureMitjaNouf(nouf, mitjes, f);
+            escriureMitjaNouf(nouf, f);
         } catch (IOException e) {
             System.out.println("ERROR, el programa ha explotat1");
         }
@@ -66,34 +67,52 @@ public class Main {
         double mitjaAnys = (double) totalAnys / compte;
         double mitjaAltura = totalAltura / compte;
 
-        // Cerrar el Scanner
+
         scanner.close();
 
         // Retornar mitjanes en un array
         return new double[]{mitjaAnys, mitjaAltura};
     }
 
-    // Funció per escriure mitjanes en un arxiu
-
     /**
      * Aquesta funció escriu les mitjanes d'edat i alçada a l'arxiu de sortida.
+     * També serveix perquè la informació estigui classificada per apartats, on com a capçalera de cada apartat s'indica l'any de la lliga.
      * @param nouf
-     * @param mitja
+     * @param f
      */
-    public static void escriureMitjaNouf(File nouf, double[] mitja, File f) {
+    public static void escriureMitjaNouf(File nouf, File f) {
         try (PrintWriter w = new PrintWriter(nouf)) {
-            // Abrir el Scanner per llegir els noms
             Scanner scanner = new Scanner(f);
 
-            // Escriure nombres y mitjanes en l'arxiu de sortida
-            while (scanner.hasNext()) {
-                String nom = scanner.next();
-                // %s fa que el printf sigui tractat com a una cadena de caràcters.
-                w.printf("Nom: %s\n", nom);
+            // Variable per emmagatzemar l'any de la lliga
+            int anyLliga = 0;
+
+            // Llegeix l'any de la lliga
+            if (scanner.hasNextLine()) {
+                String primeraLinia = scanner.nextLine();
+                // \\s+ s'utilitza per trobar un o més caràcters d'espai en blanc consecutius en una cadena de text.
+                String[] parts = primeraLinia.split("\\s+");
+                if (parts.length > 1) {
+                    anyLliga = Integer.parseInt(parts[1]);
+                }
             }
-            // el '%.2f' fa que el nombre de punt flotant sigui de 2 decimals.
-            w.printf("Mitja d'Anys: %.2f\n", mitja[0]);
-            w.printf("Mitja d'Altura: %.2f\n", mitja[1]);
+
+            // Escriu les mitjanes a l'arxiu de sortida amb l'any de la lliga com a capçalera
+            // El %d-%d és perquè s'esperen dos valors enters, substitueix el que estaria en aquesta posició amb aquests 2 nombres decimals
+            w.printf("Lliga %d-%d\n", anyLliga, anyLliga+1);
+            while (scanner.hasNext()) {
+                String name = scanner.next();
+                int anys = scanner.nextInt();
+                double altura = scanner.nextDouble();
+
+                // Escriure nom i dades
+                // % s es per entrar un valor String i que es mostri.
+                w.printf("Nom: %s\n", name);
+                // %d Es per entrar un valor decimal.
+                w.printf("Anys: %d\n", anys);
+                // %.2f es per a "l'aproximació", transforma el float a 2 decimals.
+                w.printf("Altura: %.2f\n", altura);
+            }
 
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -101,6 +120,7 @@ public class Main {
         }
     }
 }
+
 
 
 
