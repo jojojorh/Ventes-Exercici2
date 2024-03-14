@@ -67,7 +67,6 @@ public class Main {
         double mitjaAnys = (double) totalAnys / compte;
         double mitjaAltura = totalAltura / compte;
 
-
         scanner.close();
 
         // Retornar mitjanes en un array
@@ -100,10 +99,21 @@ public class Main {
             // Escriu les mitjanes a l'arxiu de sortida amb l'any de la lliga com a capçalera
             // El %d-%d és perquè s'esperen dos valors enters, substitueix el que estaria en aquesta posició amb aquests 2 nombres decimals
             w.printf("Lliga %d-%d\n", anyLliga, anyLliga+1);
+
+            // Inicialitzem els totals per a calcular la mitjana
+            int totalAnys = 0;
+            double totalAltura = 0;
+            int compte = 0; // Comptador
+
             while (scanner.hasNext()) {
                 String name = scanner.next();
                 int anys = scanner.nextInt();
                 double altura = scanner.nextDouble();
+
+                // Afegim els valors als totals per calcular la mitjana
+                totalAnys += anys;
+                totalAltura += altura;
+                compte++;
 
                 // Escriure nom i dades
                 // % s es per entrar un valor String i que es mostri.
@@ -114,13 +124,16 @@ public class Main {
                 w.printf("Altura: %.2f\n", altura);
             }
 
+            // Calculem i escrivim les mitjanes d'edat i alçada
+            double mitjaAnys = (double) totalAnys / compte;
+            double mitjaAltura = totalAltura / compte;
+
+            w.printf("Mitjana d'Anys: %.2f\n", mitjaAnys);
+            w.printf("Mitjana d'Altura: %.2f\n", mitjaAltura);
+
             scanner.close();
         } catch (FileNotFoundException e) {
             System.out.println("ERROR, el programa ha explotat2");
         }
     }
 }
-
-
-
-
